@@ -68,7 +68,7 @@ function doublet() {
 
 		if [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $HEAD ]]
 		then
-			((HH+))
+			((HH++))
 		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $HEAD ]]
 		then
 			((TH++))
