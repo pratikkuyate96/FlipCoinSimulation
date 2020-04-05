@@ -4,7 +4,9 @@
 HEAD=1
 TAIL=0
 
+#Dictionarys
 declare -A singlet
+declare -A doublet
 
 #Function
 function readValue() {
