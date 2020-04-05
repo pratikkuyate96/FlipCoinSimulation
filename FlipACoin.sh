@@ -24,6 +24,7 @@ function displayHeadTail() {
 }
 
 function singlet() {
+	echo ".......SINGLET......." 
 	readValue
 	countHead=0
 	countTail=0
@@ -50,5 +51,51 @@ function singlet() {
 	echo $singlet
 }
 
+#Function for doublet
+function doublet() {
+	echo ".......DOUBlET......."
+	readValue
+	HH=0
+	TH=0
+	HT=0
+	TT=0
+	for (( flip=1; flip<=noOfTimeFlipCoin; flip++ ))
+	do
+		randomFlip1=$((RANDOM%2))
+		randomFlip2=$((RANDOM%2))
+
+		if [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $HEAD ]]
+		then
+			((HH+))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $HEAD ]]
+		then
+			((TH++))
+		elif [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $TAIL ]]
+		then
+			((HT++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL ]]
+		then
+			((TT++))
+		fi
+	done
+
+	perHH="$HH *100 / $noOfTimesFlipCoin"
+	perTH="$TH *100 / $noOfTimesFlipCoin"
+	perHT="$HT *100 / $noOfTimesFlipCoin"
+	perTT="$TT *100 / $noOfTimesFlipCoin"
+
+	doublet[perHH]=$perHH
+	doublet[perTH]=$perTH
+	doublet[perHT]=$perHT
+	doublet[perTT]=$perTT
+
+	#Printing key value pairs
+	for key in "${!doublet[@]}"
+	do
+		echo "$key : ${doublet[$key]}"
+	done
+}
+
 displayHeadTail
 singlet
+doublet
