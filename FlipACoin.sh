@@ -26,7 +26,7 @@ function displayHeadTail() {
 }
 
 function singlet() {
-	echo ".......SINGLET......." 
+	echo ".......SINGLET......."
 	readValue
 	countHead=0
 	countTail=0
@@ -96,6 +96,7 @@ function doublet() {
 	do
 		echo "$key : ${doublet[$key]}"
 	done
+	echo $doublet
 }
 
 displayHeadTail
