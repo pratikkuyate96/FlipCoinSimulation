@@ -2,11 +2,12 @@
 
 #Constant
 HEAD=1
-TAIL=0
+zTAIL=0
 
 #Dictionarys
-declare -A singlet
-declare -A doublet
+declare -A singletDictionary
+declare -A doubletDictionary
+declare -A tripletDictionary
 
 #Function
 function readValue() {
@@ -44,13 +45,13 @@ function singlet() {
 	headPercent="$countHead *100 / $noOfTimeFlipCoin"
 	tailPercent="$countTail *100 / $noOfTimeFlipCoin"
 	#Store head and tail percentage in dictionary
-	singlet[headPer]=$headPercent
-	singlet[tailPer]=$tailPercent
+	singletDictionary[headPer]=$headPercent
+	singletDictionary[tailPer]=$tailPercent
 	#Display head and tail percentage
 	echo "headPer : " ${singlet[headPer]}
 	echo "tailPer : " ${singlet[tailPer]}
 
-	echo $singlet
+	echo $singletDictionary
 }
 
 #Function for doublet
@@ -81,23 +82,97 @@ function doublet() {
 		fi
 	done
 
-	perHH="$HH *100 / $noOfTimesFlipCoin"
-	perTH="$TH *100 / $noOfTimesFlipCoin"
-	perHT="$HT *100 / $noOfTimesFlipCoin"
-	perTT="$TT *100 / $noOfTimesFlipCoin"
+	perHH="$HH *100 / $noOfTimeFlipCoin"
+	perTH="$TH *100 / $noOfTimeFlipCoin"
+	perHT="$HT *100 / $noOfTimeFlipCoin"
+	perTT="$TT *100 / $noOfTimeFlipCoin"
 
-	doublet[perHH]=$perHH
-	doublet[perTH]=$perTH
-	doublet[perHT]=$perHT
-	doublet[perTT]=$perTT
+	doubletDictionary[perHH]=$perHH
+	doubletDictionary[perTH]=$perTH
+	doubletDictionary[perHT]=$perHT
+	doubletDictionary[perTT]=$perTT
 
 	#Printing key value pairs
-	for key in "${!doublet[@]}"
+	for key in "${!doubletDictionary[@]}"
 	do
-		echo "$key : ${doublet[$key]}"
+		echo "$key : ${doubletDictionary[$key]}"
 	done
+	echo $doubleDictionary
+}
+
+function triplet() {
+	echo ".......TRIPLET......."
+	readValue
+	HHH=0
+	HHT=0
+	HTH=0
+	THH=0
+	HTT=0
+	THT=0
+	TTH=0
+	TTT=0
+
+	for (( flip=1; flip<=$noOfTimeFlipCoin; flip++ ))
+	do
+	 	randomFlip1="$((RANDOM%2))"
+	   randomFlip2="$((RANDOM%2))"
+  		randomFlip3="$((RANDOM%2))"
+
+		if [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $HEAD ]]
+		then
+			((HHH++))
+		elif [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $TAIL ]]
+		then
+			((HHT++))
+		elif [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $HEAD ]]
+		then
+			((HTH++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $HEAD ]]
+		then
+			((THH++))
+		elif [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $TAIL ]]
+		then
+			((HTT++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $TAIL ]]
+		then
+			((THT++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $HEAD ]]
+		then
+			((TTH++))
+	   elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $TAIL ]]
+		then
+			((TTT++))
+		fi
+	done
+
+	#Find percentage of combination
+	perHHH="$HHH *100 / $noOfTimeFlipCoin"
+	perHHT="$HHT *100 / $noOfTimeFlipCoin"
+	perHTH="$HTH *100 / $noOfTimeFlipCoin"
+   perTHH="$THH *100 / $noOfTimeFlipCoin"
+	perHTT="$HTT *100 / $noOfTimeFlipCoin"
+	perTHT="$THT *100 / $noOfTimeFlipCoin"
+	perTTH="$TTH *100 / $noOfTimeFlipCoin"
+	perTTT="$TTT *100 / $noOfTimeFlipCoin"
+
+	#Store percentage of combination in dictionary
+	triplateDictionary[perHHH]=$perHHH
+	triplateDicitonary[perHHT]=$perHHT
+	triplateDicitonary[perHTH]=$perHTH
+	triplateDictionary[perTHH]=$perTHH
+	triplateDictionary[perHTT]=$perHTT
+	triplateDictionary[perTHT]=$perTHT
+	triplateDictionary[perTTH]=$perTTH
+	triplateDictionary[perTTT]=$perTTT
+
+	for key in "${!triplateDictionary[@]}"
+	do
+		echo "$key : ${triplateDictionary[$key]}"
+	done
+	echo $tripletDictionary
 }
 
 displayHeadTail
 singlet
 doublet
+triplet
