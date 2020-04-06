@@ -139,7 +139,7 @@ function triplet() {
 		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $HEAD ]]
 		then
 			((TTH++))
-	   elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $TAIL ]]
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $TAIL ]]
 		then
 			((TTT++))
 		fi
@@ -149,7 +149,7 @@ function triplet() {
 	perHHH="$HHH *100 / $noOfTimeFlipCoin"
 	perHHT="$HHT *100 / $noOfTimeFlipCoin"
 	perHTH="$HTH *100 / $noOfTimeFlipCoin"
-   perTHH="$THH *100 / $noOfTimeFlipCoin"
+	perTHH="$THH *100 / $noOfTimeFlipCoin"
 	perHTT="$HTT *100 / $noOfTimeFlipCoin"
 	perTHT="$THT *100 / $noOfTimeFlipCoin"
 	perTTH="$TTH *100 / $noOfTimeFlipCoin"
