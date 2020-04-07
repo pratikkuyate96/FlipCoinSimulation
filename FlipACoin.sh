@@ -2,11 +2,11 @@
 
 #Constant
 HEAD=1
-TAIL=0
 
 #Dictionarys
-declare -A singlet
-declare -A doublet
+declare -A singletDictionary
+declare -A doubletDictionary
+declare -A tripletDictionary
 
 #Function
 function readValue() {
@@ -26,7 +26,7 @@ function displayHeadTail() {
 }
 
 function singlet() {
-	echo ".......SINGLET......."
+	echo ".......SINGLET......." 
 	readValue
 	countHead=0
 	countTail=0
@@ -44,18 +44,42 @@ function singlet() {
 	headPercent="$countHead *100 / $noOfTimeFlipCoin"
 	tailPercent="$countTail *100 / $noOfTimeFlipCoin"
 	#Store head and tail percentage in dictionary
-	singlet[headPer]=$headPercent
-	singlet[tailPer]=$tailPercent
+	singletDictionary[headPer]=$headPercent
+	singletDictionary[tailPer]=$tailPercent
 	#Display head and tail percentage
 	echo "headPer : " ${singlet[headPer]}
 	echo "tailPer : " ${singlet[tailPer]}
 
-	echo $singlet
+	echo $singletDictionary
+	singletWinComb
+}
+
+#Function to find singlet winning combination
+function singletWinComb() {
+	maxPercent=0
+	for percent in "${singletDictionary[@]}"
+	do
+		greater=$(echo "$percent > $maxPercent" | bc -q)
+		if [ $greater -eq 1 ]
+		then
+			maxPercent=$percent
+		fi
+	done
+	winCount=0
+	for comb in "${!singletDictionary[@]}"
+	do
+		equal=$(echo "${singletDictionary[$comb]}==$maxPercent" | bc -q)
+		if [ $equal -eq 1 ]
+		then
+			winningComb[((winCount++))]=$comb
+		fi
+	done
+	echo "Winning Combination : ${winningComb[@]}"
 }
 
 #Function for doublet
 function doublet() {
-	echo ".......DOUBlET......."
+	echo ".......DOUBLET......."
 	readValue
 	HH=0
 	TH=0
@@ -81,24 +105,146 @@ function doublet() {
 		fi
 	done
 
-	perHH="$HH *100 / $noOfTimesFlipCoin"
-	perTH="$TH *100 / $noOfTimesFlipCoin"
-	perHT="$HT *100 / $noOfTimesFlipCoin"
-	perTT="$TT *100 / $noOfTimesFlipCoin"
+	perHH="$HH *100 / $noOfTimeFlipCoin"
+	perTH="$TH *100 / $noOfTimeFlipCoin"
+	perHT="$HT *100 / $noOfTimeFlipCoin"
+	perTT="$TT *100 / $noOfTimeFlipCoin"
 
-	doublet[perHH]=$perHH
-	doublet[perTH]=$perTH
-	doublet[perHT]=$perHT
-	doublet[perTT]=$perTT
+	doubletDictionary[perHH]=$perHH
+	doubletDictionary[perTH]=$perTH
+	doubletDictionary[perHT]=$perHT
+	doubletDictionary[perTT]=$perTT
 
 	#Printing key value pairs
-	for key in "${!doublet[@]}"
+	for key in "${!doubletDictionary[@]}"
 	do
-		echo "$key : ${doublet[$key]}"
+		echo "$key : ${doubletDictionary[$key]}"
 	done
-	echo $doublet
+	echo $doubleDictionary
+	doubletWinComb
+}
+
+#Function to find winning combination in doublet
+function doubletWinComb() {
+	maxPercent=0
+	for percent  in "${doubletDictionary[@]}"
+	do
+		greater=$(echo "$percent > $maxPercent" | bc -q)
+		if [ $greater -eq 1 ]
+		then
+			maxPercent=$percent
+		fi
+	done
+	winCount=0
+	for comb in "${!doubletDictionary[@]}"
+	do
+		equal=$(echo "${doubletDictionary[$comb]}==$maxPercent" | bc -q)
+		if [ $equal -eq 1 ]
+		then
+			winningCombs[((winCount++))]=$comb
+		fi
+	done
+	echo "Winning Doublet Combination : ${winningComb[@]}"
+}
+
+#Funtion for triplet
+function triplet() {
+	echo ".......TRIPLET......."
+	readValue
+	HHH=0
+	HHT=0
+	HTH=0
+	THH=0
+	HTT=0
+	THT=0
+	TTH=0
+	TTT=0
+
+	for (( flip=1; flip<=$noOfTimeFlipCoin; flip++ ))
+	do
+	 	randomFlip1="$((RANDOM%2))"
+	   randomFlip2="$((RANDOM%2))"
+  		randomFlip3="$((RANDOM%2))"
+
+		if [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $HEAD ]]
+		then
+			((HHH++))
+		elif [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $TAIL ]]
+		then
+			((HHT++))
+		elif [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $HEAD ]]
+		then
+			((HTH++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $HEAD ]]
+		then
+			((THH++))
+		elif [[ $randomFlip1 -eq $HEAD && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $TAIL ]]
+		then
+			((HTT++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $HEAD && $randomFlip3 -eq $TAIL ]]
+		then
+			((THT++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $HEAD ]]
+		then
+			((TTH++))
+		elif [[ $randomFlip1 -eq $TAIL && $randomFlip2 -eq $TAIL && $randomFlip3 -eq $TAIL ]]
+		then
+			((TTT++))
+		fi
+	done
+
+	#Find percentage of combination
+	perHHH="$HHH *100 / $noOfTimeFlipCoin"
+	perHHT="$HHT *100 / $noOfTimeFlipCoin"
+	perHTH="$HTH *100 / $noOfTimeFlipCoin"
+	perTHH="$THH *100 / $noOfTimeFlipCoin"
+	perHTT="$HTT *100 / $noOfTimeFlipCoin"
+	perTHT="$THT *100 / $noOfTimeFlipCoin"
+	perTTH="$TTH *100 / $noOfTimeFlipCoin"
+	perTTT="$TTT *100 / $noOfTimeFlipCoin"
+
+	#Store percentage of combination in dictionary
+	triplateDictionary[perHHH]=$perHHH
+	triplateDicitonary[perHHT]=$perHHT
+	triplateDicitonary[perHTH]=$perHTH
+	triplateDictionary[perTHH]=$perTHH
+	triplateDictionary[perHTT]=$perHTT
+	triplateDictionary[perTHT]=$perTHT
+	triplateDictionary[perTTH]=$perTTH
+	triplateDictionary[perTTT]=$perTTT
+
+	for key in "${!triplateDictionary[@]}"
+	do
+		echo "$key : ${triplateDictionary[$key]}"
+	done
+	echo $tripletDictionary
+	tripletWinComb
+}
+
+#Function to find winning combination in doublet
+function tripletWinComb() {
+	maxPercent=0
+	for percent  in "${tripletDictionary[@]}"
+	do
+		greater=$(echo "$percent > $maxPercent" | bc -q)
+		if [ $greater -eq 1 ]
+		then
+			maxPercent=$percent
+		fi
+	done
+	winCount=0
+	for comb in "${!tripletDictionary[@]}"
+	do
+		equal=$(echo "$tripletDictionary[$comb]}==$maxPercent" | bc -q)
+		if [ $equal -eq 1 ]
+		then
+			winningCombs[((winCount++))]=$comb
+		fi
+	done
+	echo "Winning Triplet Combination : ${winningCombs[@]}"
 }
 
 displayHeadTail
 singlet
 doublet
+triplet
